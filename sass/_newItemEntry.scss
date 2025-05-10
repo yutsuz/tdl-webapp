@@ -1,7 +1,7 @@
-_newItemEntry {
+.newItemEntry {
     position: sticky;
     top: 0;
-    margin: 1rem;
+    margin-bottom: 1rem;
     padding: 0.75rem;
 
     form {
@@ -21,6 +21,19 @@ _newItemEntry {
             border-radius: none;
             padding: 0.75rem;
             outline: none;
+        }
+
+        input[type="text"]:focus, input[type="text"]:hover {
+            box-shadow: 4px 2px 5px #000;
+        }
+
+        button {
+            font-size: 1.25rem;
+            background-color: $add-button-color;
+            padding: 0.75rem;
+            @include mq(768px) {
+                font-size: 1.5rem;
+            }
         }
     }
 }
