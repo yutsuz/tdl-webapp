@@ -1,0 +1,47 @@
+$default-font-color: #000;
+$background-color: rgb(51, 255, 129);
+$container-background-color: #fff;
+$container-border-color: #000;
+$textbox-border-color: #b1b1b1;
+$button-text-color: #fff;
+$button-hover-color: #000;
+$add-button-color: #0022ff;
+$clear-button-color:#e26e7a;
+
+@mixin mq($size) {
+    @media only screen and (min-width: $size) {
+        @content;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: 0;
+}
+
+html, body {
+    font-size: 16px;
+    font-family: 'Times New Roman', Times, serif;
+    color: $default-font-color;
+    width: 100%;
+    min-height: 100%;
+    //mobile design, which can be scaled up
+    @include mq(768px) {
+        font-size: 22px;
+    }
+}
+
+body {
+    padding: 20px;
+    background-color: $background-color;
+}
+
+section {
+    background-color: $container-background-color;
+    width: 90%;
+    max-width: 700px;
+    margin: auto;
+    border: 1px solid $container-border-color;
+    border-radius: 10px;
+}
