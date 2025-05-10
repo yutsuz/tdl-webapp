@@ -2,6 +2,7 @@ import ToDoList from "./todolist.js";
 import ToDoItem from "./todoitem.js";
 
 const toDoList = new ToDoList();
+
 const initApp = () => {
     //Add listeners
     const itemEntryForm = document.getElementById("itemEntryForm");
@@ -11,11 +12,27 @@ const initApp = () => {
         processSubmission();
     });
 
+    const clearItems = document.getElementById("clearItems");
+    clearItems.addEventListener("click", (event) => {
+        const list = toDoList.getList();
+        if(list.length) {
+            const confirmed = confirm("Clear entire list?");
+            if(confirmed) {
+                toDoList.clearList();
+                updatePersistentData(toDoList.getList());
+                refreshPage();
+            }
+        }
+    });
+
     //Procedural items
     //Load list object
+    loadListObject();
+
     //Refresh page
     refreshPage();
 };
+
 //Launch app
 document.addEventListener("readystatechange", (event) => {
     if(event.target.readyState === "complete") {
@@ -23,7 +40,18 @@ document.addEventListener("readystatechange", (event) => {
     }
 });
 
-
+const loadListObject = () => {
+    const storedList = localStorage.getItem("myToDoList");
+    //check if the stored data is stringified JSON
+    //if not, return
+    if(typeof storedList !== "string") return;
+    const parsedList = JSON.parse(storedList);
+    //populate list
+    parsedList.forEach(itemObj => {
+        const newToDoItem = createNewItem(itemObj._id, itemObj._item);
+        toDoList.addItemToList(newToDoItem);
+    });
+}
 
 const refreshPage = () => {
     clearListDisplay();
@@ -73,12 +101,16 @@ const buildListItem = (item) => {
 const addClickListenerToCheckbox = (checkbox) => {
     checkbox.addEventListener("click", (event) => {
         toDoList.removeItemFromList(checkbox.id);
-        //TODO remove from persistent data
+        updatePersistentData(toDoList.getList());
         //Add timeout for visual
         setTimeout(() => {
             refreshPage();
         }, 1000);
     });
+};
+
+const updatePersistentData = (listArray) => {
+    localStorage.setItem("myToDoList", JSON.stringify(listArray));
 };
 
 const clearItemEntryField = () => {
@@ -95,7 +127,7 @@ const processSubmission = () => {
     const nextItemId = calcNextItemId();
     const toDoItem = createNewItem(nextItemId, newEntryText);
     toDoList.addItemToList(toDoItem);
-    //TODO update persistant data to reflect new added item
+    updatePersistentData(toDoList.getList());
     refreshPage();
 }
 
